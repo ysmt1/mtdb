@@ -1,2 +1,2 @@
 # MTDB
-Web app using flask/python
+Web App developed with Flask/Python/JavaScript/HTML/CSS
