@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+
+{% block title %}Error!{% endblock %}
+
+{% block head %}{{ super() }}{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-md-center">
+        <div class="col-10">
+            <h1>Error!</h1>
+            {{ message }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+
+{% block title %}Muay Thai DB{% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="google-site-verification" content="FSuDd2U66BZYYmb3_Br9Yg-vL1jVAiI-Kl-jOcNj2eM" />
+{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center mt-1">
+        <div class="col-12 col-lg-10">
+            <h2>Welcome to Muay Thai DB!</h2>
+            <img src='/static/image.jpg' class="logo">
+            <h5>Find a training partner in Thailand!</h5>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-7 col-lg-5 searchdiv">
+            <div class="form-inline">
+                <div class="form-group searchbox">
+                    <label id="filter-label" for="filter-row">Search: </label>
+                    <input type="text" id="filter-row" class="form-control form-control-sm mx-2" size="12">
+                </div>
+            </div>
+        </div>
+        <div class="col-5 col-lg-5" style="text-align: right">
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="customSwitch1" checked>
+                <label class="custom-control-label" for="customSwitch1" style="vertical-align: -10px" >All Gyms</label>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <table class = "table table-sm table-striped table-bordered table-main" id="indexTable">
+                <tr>
+                    <th id="th_gym_name" class="header" style="width: 20%" onclick="sortTable(0,this);">Gym Name<span class="sorticon"><i class="fas fa-sort"></i></span></th>
+                    <th id="th_gym_loc" class="header" style="width: 20%" onclick="sortTable(1,this);">Location<span class="sorticon"><i class="fas fa-sort"></i></span></th>
+                    <th id="th_gym_rate" class="header" style="width: 20%" onclick="sortTable(2,this);">Average Rating<span class="sorticon"><i class="fas fa-sort"></i></span></th>
+                    <th id="th_num_rate" class="header" style="width: 20%" onclick="sortTable(3,this);">Number of Ratings<span class="sorticon"><i class="fas fa-sort"></i></span></th>
+                    <th id="th_days_train" class="header" style="width: 20%" onclick="sortTable(4,this);">Total Days Trained<span class="sorticon"><i class="fas fa-sort"></i></span></th>
+                </tr>
+            
+                {% for gym in gyms %}
+                    <tr>
+                        <td class="searchable"><a href = "{{ url_for('main_app.gym', gym_id = gym.id) }}">{{ gym.gym }}</a></td>
+                        <td class="searchable">{{ gym.city }}</td>
+                        <td>
+                            {%- if gym['average'] is none -%}
+                            No Ratings
+                            {%- else -%}
+                            {{ gym.average }}
+                            {%- endif -%}
+                        </td>
+                        <td>{{ gym.count }}</td>
+                        <td>
+                            {%- if gym['sum_days'] is none -%}
+                            0
+                            {%- else -%}
+                            {{ gym.sum_days }}
+                            {%- endif -%}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">
+                    75% Complete
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename = 'table-functions.js') }}"></script>
+{% endblock %}

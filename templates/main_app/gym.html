@@ -1,0 +1,166 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Gym
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename = 'ekko-lightbox.css') }}">
+{% endblock %}
+{% block body %}
+
+    <h1>{{ gym.gym }}</h1>
+    <br>
+    <div class="row justify-content-center my-0">
+        <div class="col-12 col-lg-10">
+            <div class="table-responsive-sm">
+                <table class="table table-bordered table-sm">
+                    <tr>
+                        <th style="width: 15%">Location</th>
+                        <th style="width: 50%">Website</th>
+                        <th style="width: 15%">$ per Session</th>
+                        <th style="width: 10%">Weekly $</th>
+                        <th style="width: 10%">Monthly $</th>
+                    </tr>
+                    <tr>
+                        <td>{{ gym.city }}</td>
+                        <td>Website</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% if images %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <div class="text-center">
+                    {% for image in images %}
+                        {% if 'Uploads' not in image %}
+                            <a target="_blank" href="{{ image }}" style="text-decoration: none" data-toggle="lightbox" data-gallery="gym-gallery">
+                                <!-- <img src="{{ image }}" class="img-fluid img-thumbnail"> -->
+                                <div class="thumbnail" style="background-image: url({{ image }});"></div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% for rating in ratings %}
+
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-lg-10">
+                <div class="card">
+                    <div class="card-header py-1" style="background-color: #A9C9A4;">
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-auto">
+                                <span class="ratingname">Training: </span><span class="rating">{{rating.rating_training}}</span>
+                            </div>
+                            <div class="col-12 col-md-auto">
+                                <span class="ratingname">Facility: </span><span class="rating">{{rating.rating_facility}}</span>
+                            </div>
+                            <div class="col-12 col-md-auto">
+                                <span class="ratingname">Location/Cost: </span><span class="rating">{{rating.rating_location}}</span>
+                            </div>
+                            <div class="col-12 col-md-auto">
+                                <span class="ratingname">Overall: </span><span class="rating">{{rating.rating}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body py-2">
+                        <p class="card-text" style="white-space: pre-line">{{rating.review}}</p>
+                        {% if images %}
+                            {% for image in images %}
+                                {% if "/%s/"|format(rating.username) in image %}
+                                    <a target="_blank" href="{{ image }}" style="text-decoration: none" data-toggle="lightbox" data-gallery="{{ rating['reviewid'] ~ 'gallery'}}">
+                                        <div class="thumbnail-sm" style="background-image: url({{ image }});"></div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="card-footer py-1"> 
+                        <div class="row">
+                            <div class="col-12 col-md-8 footercol1">
+                                <span class="footer">
+                                    By <i class="fas fa-user"></i>
+                                    <a href="{{ url_for('main_app.view_user_profile', username = rating.username) }}">{{rating.username}}</a>                                    
+                                    on {{rating.review_date.strftime('%m/%d/%Y')}} - <i class="far fa-clock"></i> {{rating.stay_length}} - <i class="far fa-thumbs-up"></i>
+                                    <span id="{{ rating['reviewid'] ~ 'like'}}"> {{rating.count}}</span>
+                                    <span id="{{ rating['reviewid'] ~ 'error'}}"></span>
+                                </span>
+                            </div>
+                            {% if g.user['id'] == rating['userid'] %}
+                                <div class="col-12 col-md-4 footercol2">
+                                    <span class="cardbuttons">
+                                        <form action="{{ url_for('main_app.delete', id = rating['reviewid']) }}" method="POST" style="display: inline-block;">
+                                            <button type="submit" value="delete" class="btn btn-danger btn-sm btnspace" onclick="return confirm('Are you sure?');">
+                                                <i class="far fa-trash-alt"></i> Delete</button>
+                                        </form>
+                                        <form action="{{ url_for('main_app.update', id = rating['reviewid']) }}" method="GET" style="display: inline-block">
+                                            <button type="submit" class="btn btn-warning btn-sm btnspace">
+                                                <i class="far fa-edit"></i> Edit</button>
+                                        </form>
+                                    </span>
+                                </div>
+                            {% elif g.user %}
+                                <div class="col-12 col-md-4 footercol2">
+                                    <span class = 'cardbuttons'>
+                                    {% if func(rating['reviewid']) == True %}
+                                        <form class="form-unlike" id="{{ rating['reviewid'] ~ 'form-unlike'}}" action="{{ url_for('main_app.unlike_review', id = rating['reviewid']) }}" method="POST"
+                                            style="display: inline-block;">
+                                            <button type="submit" class="btn btn-danger btn-sm btnspace">
+                                                <i class="fas fa-thumbs-down"></i></button>
+                                        </form>
+                                        <form class="form-like" id="{{ rating['reviewid'] ~ 'form-like'}}" action="{{ url_for('main_app.like_review', id = rating['reviewid']) }}" method="POST" style="display: none;">
+                                            <button type="submit" class="btn btn-success btn-sm btnspace">
+                                                <i class="fas fa-thumbs-up"></i></button>
+                                        </form>
+                                    {% else %}
+                                        <form class="form-like" id="{{ rating['reviewid'] ~ 'form-like'}}" action="{{ url_for('main_app.like_review', id = rating['reviewid']) }}" method="POST" style="display: inline-block;">
+                                            <button type="submit" class="btn btn-success btn-sm btnspace">
+                                                <i class="fas fa-thumbs-up"></i></button>
+                                        </form>
+                                        <form class="form-unlike" id="{{ rating['reviewid'] ~ 'form-unlike'}}" action="{{ url_for('main_app.unlike_review', id = rating['reviewid']) }}" method="POST"
+                                            style="display: none;">
+                                            <button type="submit" class="btn btn-danger btn-sm btnspace">
+                                                <i class="fas fa-thumbs-down"></i></button>
+                                        </form>
+                                    {% endif %}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                <table>
+                    <tr>
+                        <th>No Ratings</th>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    {% endfor %}
+    <div id="test"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename = 'stars.js') }}"></script>
+<script src="{{ url_for('static', filename = 'like.js') }}"></script>
+<script src="{{ url_for('static', filename = 'ekko-lightbox.min.js') }}"></script>
+<script>
+    $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+        event.preventDefault();
+        $(this).ekkoLightbox();
+    });
+</script>
+{% endblock %}

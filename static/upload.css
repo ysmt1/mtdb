@@ -1,0 +1,35 @@
+form ol {
+  padding-left: 0;
+  margin-bottom: 5px
+}
+
+form li, div > p {
+  background: #ffffff;
+  display: inline-flex;
+  justify-content: space-between;
+  margin-right: 5px;
+  list-style-type: none;
+  border: 1px solid black;
+}
+
+form img {
+  height: 80px;
+  order: 1;
+}
+
+form p {
+  line-height: 32px;
+  padding-left: 10px;
+}
+
+.custom-file {
+    margin-bottom: 10px;
+}
+
+.alert.alert-danger.error-div {
+  padding: 3px 5px;
+}
+
+.alert.alert-warning.error-div {
+  padding: 3px 5px;
+}

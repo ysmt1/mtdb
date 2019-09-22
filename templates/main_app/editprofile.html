@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block head %}
+{{ super() }}
+<script>
+    $(document).ready(function () {
+        $('input[type=checkbox]').on('change', function (e) {
+            if ($('input[type=checkbox]:checked').length > 1) {
+                $(this).prop('checked', false);
+            }
+        });
+    });
+</script>
+{% endblock %}
+
+{% block body %}
+
+    <div class="row justify-content-center my-3">
+    
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+    
+            <div class="card">
+    
+                <div class="card-header py-1" style="background-color: rgb(217, 237, 247);">
+    
+                    {{ profile['username'] }}
+    
+                </div>
+    
+                <div class="card-body py-1">
+
+                    <form action="{{ url_for('main_app.edit_user_profile', username = profile['username']) }}" method="POST">
+    
+                        <div class="form-group row my-1">
+                            <label class="col-5 col-form-label">Name:</label>
+                            <div class='col-7'>
+                                <input type="text" class="form-control" name="realname" {% if profile['name'] is none %} value="" {% else %}
+                                    value="{{ profile['name']}}" {% endif %}>
+                            </div>
+                        </div>
+        
+                        <div class="card-border"></div>
+        
+                        <div class="form-group row my-1">
+                            <label class="col-5 col-form-label">Email:</label>
+                            <div class='col-7'>
+                                <input type="email" class="form-control" name="email" {% if profile['email'] is none %} value="" {% else %}
+                                    value="{{ profile['email']}}" {% endif %}>
+                            </div>
+                        </div>
+        
+                        <div class="card-border"></div>
+        
+                        <div class="form-group row my-1">
+                            <label class="col-5 col-form-label">Location:</label>
+                            <div class='col-7'>
+                                <input type="text" class="form-control" name="location" {% if profile['location'] is none %} value="" {% else %}
+                                    value="{{ profile['location']}}" {% endif %}>
+                            </div>
+                        </div>
+        
+                        <div class="card-border"></div>
+        
+                        <div class="form-group row my-1">
+                            <label class="col-5 col-form-label">Experience Level: </label>
+                            <div class='col-7'>
+                                <select class="form-control" name="experience">
+                                    <option value="" {% if profile['experience'] is none %} selected="selected" {% endif %}>Select..</option>
+                                    <option value='Beginner' {% if profile['experience'] == "Beginner" %} selected="selected" {% endif %}>Beginner
+                                    </option>
+                                    <option value='Intermediate' {% if profile['experience'] == "Intermediate" %} selected="selected" {% endif %}>
+                                        Intermediate</option>
+                                    <option value='Advanced' {% if profile['experience'] == "Advanced" %} selected="selected" {% endif %}>Advanced
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+        
+                        <div class="card-border"></div>
+
+                        <div class="form-group row my-1">
+                            <label class="col-5 col-form-label">Check In: </label>
+                            <div class='col-7'>
+                                <select class="form-control" name="checkin">
+                                {% if profile['checkin'] is none %}
+                                    <option value="">Select Gym</option>
+                                    {% for gym in gyms %}
+                                        <option value="{{ gym.id }}">{{ gym.gym }}</option>
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="">None</option>
+                                    <!--<option value="{{ profile['checkin'] }}" selected>{{ profile['gymname']}}</option>-->
+                                    {% for gym in gyms %} 
+                                        <option value="{{ gym.id }}"{% if profile['checkin'] == gym.id %} selected{% endif %}>{{ gym.gym }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="card-border"></div>
+        
+                        <div class="form-group row my-1">
+                            <label class="col-5 col-form-label">Fighter?</label>
+                            <div class='col-7'>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck1" name="fighter" value="amateur"
+                                        {% if profile['fighter']=="amateur" %} checked{% endif %}>
+                                    <label class="custom-control-label" for="customCheck1">Amateur</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" id="customCheck2" name="fighter" value="professional"
+                                        {% if profile['fighter']=="professional" %} checked{% endif %}>
+                                    <label class="custom-control-label" for="customCheck2">Professional</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    
+        
+                </div>
+  
+                <div class="card-footer py-1">
+    
+                    <span style="float: right"><button class="btn btn-success btn-sm"><i class="fas fa-check"></i>&nbsp&nbspUpdate</button></span>
+
+                </form>
+    
+                </div>
+    
+            </div>
+    
+        </div>
+    
+    </div>
+
+{% endblock %}

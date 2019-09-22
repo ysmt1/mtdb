@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+
+{% block title %}Update Review{% endblock %}
+
+{% block head %}
+{{ super() }}
+<script src="{{ url_for('static', filename = 'stars.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+
+    <h1>Update Review</h1>
+
+    <form action = "{{ url_for('main_app.update', id = old_review['id']) }}" method = "POST">
+
+        <div class='form row justify-content-center'>
+            <div class="form-group col-12 col-md-2">
+                <label for="disabledSelect">Gym</label>
+                <select id="disabledSelect" class="form-control" disabled>
+                    <option>{{ old_review['gym_name'] }}</option>
+                </select>
+            </div>
+            <div class='form-group col-12 col-md-6'>
+                <label for="customRange">Stay Length</label>
+                <div class="form-row">
+                    <div class="col">
+                        <input type="range" class="custom-range" id="customRange" name="length_stay" min="0" max="50" value="{{ old_review['stay_length'].split()[0] }}" oninput="updateTextInput(this.value);" required>
+                    </div>
+                    <div class="col-auto">
+                        <output name="OutputName" class="custom-range" id="OutputId" value="">{{ old_review['stay_length'].split()[0] }}</output>
+                    </div>
+                </div>
+            </div>
+            <div class='form-group col-12 col-md-2'>
+                <label>Unit of Time</label>
+                <select id="inputTime1" class="form-control" name="unit_stay">
+                    <option value="Days"{% if old_review['stay_length'].split()[1][0].lower()=='d' %} selected="selected"{% endif %}>Days</option>
+                    <option value='Weeks'{% if old_review['stay_length'].split()[1][0].lower()=='w' %} selected="selected"{% endif %}>Weeks</option>
+                    <option value='Months'{% if old_review['stay_length'].split()[1][0].lower()=='m' %} selected="selected"{% endif %}>Months</option>
+                    <option value='Years'{% if old_review['stay_length'].split()[1][0].lower()=='y' %} selected="selected"{% endif %}>Years</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row justify-content-center">
+            <div class='form-group col-12 col-md-10 col-lg-6'>
+                Rate the Training (Instruction, Trainers, Padwork, Sparring, Clinching, etc.):
+            </div>
+            <div class='form-group col-12 col-md-10 col-lg-4' style="text-align: right">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio" name="rate_training" value="1"{% if old_review["rating_training"]==1 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio">1</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio2" name="rate_training" value="2"{% if old_review["rating_training"]==2 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio2">2</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio3" name="rate_training" value="3"{% if old_review["rating_training"]==3 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio3">3</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio4" name="rate_training" value="4"{% if old_review["rating_training"]==4 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio4">4</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio5" name="rate_training" value="5"{% if old_review["rating_training"]==5 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio5">5</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row justify-content-center">
+            <div class='form-group col-12 col-md-10 col-lg-6'>
+                Rate the Facilities (Equipment, Hygiene, Onsite Accommodations, etc.):
+            </div>
+            <div class='form-group col-12 col-md-10 col-lg-4' style="text-align: right">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio6" name="rate_facility" value="1"{% if old_review["rating_facility"]==1 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio6">1</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio7" name="rate_facility" value="2"{% if old_review["rating_facility"]==2 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio7">2</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio8" name="rate_facility" value="3"{% if old_review["rating_facility"]==3 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio8">3</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio9" name="rate_facility" value="4"{% if old_review["rating_facility"]==4 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio9">4</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio10" name="rate_facility" value="5"{% if old_review["rating_facility"]==5 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio10">5</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row justify-content-center">
+            <div class='form-group col-12 col-md-10 col-lg-6'>
+                Rate the Location/Price (Nearby Attractions/Housing/Transport/Food, etc.):
+            </div>
+            <div class='form-group col-12 col-md-10 col-lg-4' style="text-align: right">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio11" name="rate_locationcost" value="1"{% if old_review["rating_location"]==1 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio11">1</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio12" name="rate_locationcost" value="2"{% if old_review["rating_location"]==2 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio12">2</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio13" name="rate_locationcost" value="3"{% if old_review["rating_location"]==3 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio13">3</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio14" name="rate_locationcost" value="4"{% if old_review["rating_location"]==4 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio14">4</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio15" name="rate_locationcost" value="5"{% if old_review["rating_location"]==5 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio15">5</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row justify-content-center">
+            <div class='form-group col-12 col-md-10 col-lg-6'>
+                <b>Overall Rating (1 = Bad &#128542;, 3 = Ok &#128528;, 5 = Great! &#128513;): </b>
+            </div>
+            <div class='form-group col-12 col-md-10 col-lg-4' style="text-align: right">
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio16" name="rate_overall" value="1"{% if old_review["rating"]==1 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio16">1</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio17" name="rate_overall" value="2"{% if old_review["rating"]==2 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio17">2</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio18" name="rate_overall" value="3"{% if old_review["rating"]==3 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio18">3</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio19" name="rate_overall" value="4"{% if old_review["rating"]==4 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio19">4</label>
+                </div>
+                <div class="custom-control custom-radio custom-control-inline">
+                    <input type="radio" class="custom-control-input" id="customRadio20" name="rate_overall" value="5"{% if old_review["rating"]==5 %} checked{% endif %}>
+                    <label class="custom-control-label" for="customRadio20">5</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-row justify-content-center">
+            <div class='form-group col-12 col-md-10'>
+                <textarea class="form-control" name="review" placeholder="Write your Review", rows="10" required>{{request.form['review'] or old_review['review'] }}</textarea>     
+            </div>
+        </div>
+
+        <div class="form-row justify-content-center">
+            <div class="form-group col-12 col-md-10 text-right">
+                <input class="btn btn-secondary" type="reset" value="Reset">
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

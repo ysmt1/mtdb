@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block title %}View Profile{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block body %}
+
+    <div class="row justify-content-center my-3">
+    
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+
+            <div class="card">
+
+                <div class="card-header py-1" style="background-color: rgb(217, 237, 247);">
+
+                    {{ profile['username'] }}
+
+                    {% if g.user['id'] == profile['id'] %}
+                    <span style="float: right">
+                        <form action="{{ url_for('main_app.edit_user_profile', username = profile['username']) }}" method="GET">
+                            <button type="submit" class="btn btn-warning btn-sm" style="background-color: rgb(217, 237, 247); border: none; padding: 3px">
+                                <i class="far fa-edit"></i></button>
+                        </form>
+                    </span>
+                    {% endif %}
+                    
+                </div>
+                    
+                <div class="card-body py-1">
+
+                    <div class="row">
+                        <div class="col-6">Name:</div>
+                        <div class='col-6'>{{ profile['name'] if profile['name'] }}</div>
+                    </div>
+
+                    <div class="card-border"></div>
+
+                    <div class="row">
+                        <div class="col-6">Email:</div>
+                        <div class='col-6'>{{ profile['email'] if profile['email'] }}</div>
+                    </div>
+
+                    <div class="card-border"></div>
+
+                    <div class="row">
+                        <div class="col-6">Location:</div>
+                        <div class='col-6'>{{ profile['location'] if profile['location'] }}</div>
+                    </div>
+
+                    <div class="card-border"></div>
+
+                    <div class="row">
+                        <div class="col-6">Experience Level: </div>
+                        <div class='col-6'>{{ profile['experience'] if profile['experience'] }}</div>
+                    </div>
+
+                    <div class="card-border"></div>
+
+                    <div class="row">
+                        <div class="col-6">Checked In: </div>
+                        <div class='col-6'>{{ profile['gymname'] if profile['checkin'] }}</div>
+                    </div>
+                    
+                    <div class="card-border"></div>
+
+                    <div class="row">
+                        <div class="col-6">Fighter?</div>
+                        <div class='col-6'>{{ profile['fighter'].title() if profile['fighter']}}</div>
+                    </div>
+
+                </div>
+
+                <div class="card-footer py-1">
+
+                    {% if profile['fighter'] %} <span class="badge badge-success">Fighter</span> {% endif %}
+                    {% if profile['experience'] %} <span class="badge badge-info">{{ profile['experience'] }}</span> {% endif %}
+                    {% if profile['location'] %} <span class="badge badge-danger">{{ profile['location'] }}</span> {% endif %}
+                    {% if profile['checkin'] %} <span class="badge badge-primary" style='background-color: rgb(253, 135, 0)'>@ {{ profile['gymname'] }}</span> {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>            
+
+{% endblock %}
